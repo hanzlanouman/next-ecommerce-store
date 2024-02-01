@@ -40,7 +40,6 @@ export default function SignIn() {
             const signInRes = await signIn("credentials", {
                 ...values,
                 redirect: false,
-                callbackUrl: "/",
             });
             actions.setSubmitting(false);
             if (signInRes?.error === 'CredentialsSignin') {

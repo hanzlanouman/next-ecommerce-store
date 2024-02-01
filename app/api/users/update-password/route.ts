@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import startDb from '@lib/db';
 import PasswordResetTokenModel from '@models/passwordResetTokenModel';
 import nodemailer from 'nodemailer';
+import { sendEmail } from '@/app/lib/email';
 
 export const POST = async (req: Request) => {
   try {
@@ -58,19 +59,9 @@ export const POST = async (req: Request) => {
 
     await PasswordResetTokenModel.findByIdAndDelete(resetToken._id);
 
-    var transport = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
-      auth: {
-        user: 'd3e8c1b747bead',
-        pass: 'c37ce03482d1c4',
-      },
-    });
-
-    await transport.sendMail({
-      from: 'verification@nextecomm.com',
-      to: user.email,
-      html: `<h1> Your Password Has been Reset ! </h1>`,
+    await sendEmail({
+      profile: { name: user.name, email: user.email },
+      subject: 'password changed',
     });
 
     return NextResponse.json(

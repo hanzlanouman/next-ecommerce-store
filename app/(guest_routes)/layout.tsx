@@ -3,6 +3,7 @@ import React, {
 } from 'react'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
+import Navbar from '@components/navbar'
 interface Props {
   children: ReactNode
 
@@ -15,7 +16,10 @@ const GuestLayout = async ({ children }: Props) => {
     return redirect('/')
   }
   return (
-    <div>{children}</div>
+    <div
+      className='max-w-screen-xl mx-auto p-4 xl:p-0'
+    >
+      <Navbar />{children}</div>
   )
 }
 

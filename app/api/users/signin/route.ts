@@ -34,6 +34,7 @@ export const POST = async (req: Request) => {
       email: user.email,
       avatar: user.avatar?.url,
       role: user.role,
+      verified: user.verified,
     },
   });
 };

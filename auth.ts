@@ -1,7 +1,12 @@
 import NextAuth, { NextAuthConfig, Session } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { SignInCredentials } from './app/types';
-import { JWT } from 'next-auth/jwt';
+import { SessionUserProfile } from './app/types';
+declare module 'next-auth' {
+  interface Session {
+    user: SessionUserProfile;
+  }
+}
 
 const authConfig: NextAuthConfig = {
   providers: [
@@ -32,21 +37,28 @@ const authConfig: NextAuthConfig = {
   callbacks: {
     async jwt(params) {
       if (params.user) {
-        params.token.user = params.user;
+        params.token = {
+          ...params.token,
+          ...params.user,
+        };
       }
       return params.token;
     },
     async session(params) {
-      // Type assertion for params
-      const sessionParams = params as { session: Session; token?: JWT };
+      const user = params.token as typeof params.token & SessionUserProfile;
 
-      if (sessionParams.token && sessionParams.token.user) {
-        sessionParams.session.user = {
-          ...sessionParams.session.user,
-          ...sessionParams.token.user,
+      if (user) {
+        params.session.user = {
+          ...params.session.user,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+          verified: user.verified,
+          role: user.role,
         };
       }
-      return sessionParams.session;
+      return params.session;
     },
   },
 };

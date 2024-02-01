@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import { filterFormikErrors } from "@/app/utils/formikHelpers";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 
 const validationSchema = yup.object().shape({
@@ -23,22 +24,28 @@ export default function SignUp() {
             name: '', email: '', password: ''
         },
         validationSchema,
-        onSubmit: (values, action) => {
+        onSubmit: async (values, action) => {
             action.setSubmitting(true)
-            fetch('/api/users',
+            const res = await fetch('/api/users',
                 {
                     method: 'POST',
                     body: JSON.stringify(values)
-                }).then(async res => {
-                    if (res.ok) {
-                        const { message } = await res.json() as {
-                            message: string;
-                        };
-                        toast.success(message)
-                    }
-                    action.setSubmitting(false)
                 })
 
+            const { message, error } = await res.json()
+
+
+            if (res.ok) {
+                toast.success(message)
+                await signIn('credentials',
+                    {
+                        email: values.email,
+                        password: values.password,
+                    })
+            }
+            if (!res.ok && error) {
+                toast.error(error)
+            }
         }
     })
 

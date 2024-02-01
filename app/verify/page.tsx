@@ -41,6 +41,8 @@ const Verify = (
                     }
 
                     if (!res.ok && error) toast.error(error)
+
+                    router.replace('/')
                 })
         }
     )
