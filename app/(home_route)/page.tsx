@@ -1,9 +1,11 @@
 
 import React, { FC } from 'react'
-import startDb from '../lib/db'
-import ProductModel from '../models/productModel'
-import GridView from '../components/GridView'
-import ProductCard from '../components/ProductCard'
+import startDb from '@lib/db'
+import ProductModel from '@models/productModel'
+import GridView from '@components/GridView'
+import ProductCard from '@components/ProductCard'
+import FeaturedProductsSlider from '@components/FeaturedProductsSlider'
+import FeaturedProductModel from '../models/featuredProduct'
 
 
 interface LatestProduct {
@@ -41,20 +43,51 @@ const fetchLatestProducts = async () => {
   return JSON.stringify(productList)
 }
 
+const fetchFeaturedProducts = async () => {
+  await startDb()
+  const products = await FeaturedProductModel.find().sort('-createdAt')
+
+  const productList = products.map((product) => {
+    return {
+      id: product._id.toString(),
+      title: product.title,
+      banner: product.banner.url,
+      link: product.link,
+      linkTitle: product.linkTitle
+    }
+  })
+
+
+  return JSON.stringify(productList)
+}
+
+
 const Home: FC = async (
 
 ) => {
 
   const latestProducts = await fetchLatestProducts()
+
+  const featuredProducts = JSON.parse(await fetchFeaturedProducts())
+
   const parsedProducts = JSON.parse(latestProducts) as LatestProduct[]
+
+
   return (
-    <GridView>
-      {
-        parsedProducts.map((product) => {
-          return (<ProductCard key={product.id} product={product} />)
-        })
-      }
-    </GridView>
+    <div
+      className='py-5 space-y-10'
+    >
+      <FeaturedProductsSlider
+        products={featuredProducts}
+      />
+      <GridView>
+        {
+          parsedProducts.map((product) => {
+            return (<ProductCard key={product.id} product={product} />)
+          })
+        }
+      </GridView>
+    </div>
   )
 }
 
