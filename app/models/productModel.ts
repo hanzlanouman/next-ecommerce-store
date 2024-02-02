@@ -13,7 +13,6 @@ export interface NewProduct {
   };
   category: string;
   quantity: number;
-  rating?: number;
 }
 
 // Step 1: Define the interface for the document
@@ -46,7 +45,6 @@ const productSchema = new Schema<ProductDocument>(
     },
     category: { type: String, enum: [...categories], required: true },
     quantity: { type: Number, required: true },
-    rating: Number,
   },
   { timestamps: true }
 );
