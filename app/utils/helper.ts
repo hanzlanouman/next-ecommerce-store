@@ -23,3 +23,19 @@ export const uploadImage = async (file: File) => {
     id: data.public_id,
   };
 };
+
+export const formatPrice = (amount: number) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'PKR',
+  });
+
+  return formatter.format(amount);
+};
+
+export const extractPublicId = async (url: string) => {
+  const splitteddata = url.split('/');
+  const lastItem = splitteddata[splitteddata.length - 1];
+  const publicId = lastItem.split('.')[0];
+  return publicId;
+};

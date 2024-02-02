@@ -7,7 +7,8 @@ import { removeAndUpdateProductImage, removeImageFromCloud, updateProduct } from
 import { updateProductInfoSchema } from '../utils/validationSchema'
 import { ValidationError } from 'yup'
 import { toast } from 'react-toastify'
-import { uploadImage } from '../utils/helper'
+import { extractPublicId, uploadImage } from '../utils/helper'
+import { useRouter } from 'next/navigation'
 
 interface Props {
     product: ProdcutResponse
@@ -15,6 +16,8 @@ interface Props {
 
 
 const UpdateProduct = ({ product }: Props) => {
+
+    const router = useRouter()
 
     const initialValue: InitialValue = {
         ...product,
@@ -26,12 +29,9 @@ const UpdateProduct = ({ product }: Props) => {
     }
 
 
-    const handleImageRemove = (source: string) => {
+    const handleImageRemove = async (source: string) => {
 
-        const splittedData = (source.split('/'))
-        const lastItem = splittedData[splittedData.length - 1]
-
-        const publicId = (lastItem.split('.')[0])
+        const publicId = await extractPublicId(source)
         removeAndUpdateProductImage(product.id, publicId)
     }
 
@@ -76,6 +76,10 @@ const UpdateProduct = ({ product }: Props) => {
 
             await updateProduct(product.id, dataToUpdate)
 
+            toast.success("Product updated successfully")
+
+            router.refresh()
+            router.push('/products')
         } catch (error) {
             if (error instanceof ValidationError) {
                 error.inner.forEach(err => {

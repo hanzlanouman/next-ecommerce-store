@@ -11,6 +11,11 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import truncate from "truncate";
+import { formatPrice } from "../utils/helper";
+import { toast } from "react-toastify";
+import useAuth from "../hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 interface Props {
     product: {
@@ -28,6 +33,25 @@ interface Props {
 }
 
 export default function ProductCard({ product }: Props) {
+    const { loggedIn } = useAuth()
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter()
+    const addToCart = async () => {
+
+        if (!loggedIn) return router.push('/auth/signin')
+        const res = await fetch("/api/product/cart", {
+            method: "POST",
+            body: JSON.stringify({ productId: product.id, quantity: 1 }),
+        });
+
+        const { error } = await res.json();
+
+        if (!res.ok && error) toast.error(error);
+        if (res.ok) toast.success("Product added to cart");
+
+
+    };
+
     return (
         <Card className="w-full">
             <Link className="w-full" href={`/${product.title}/${product.id}`}>
@@ -36,8 +60,10 @@ export default function ProductCard({ product }: Props) {
                     floated={false}
                     className="relative w-full aspect-square m-0"
                 >
-                    <Image src={product.thumbnail} alt={product.title} fill />
-                    <div className="absolute right-0 p-2">
+                    <Image
+                        className="object-contain"
+                        src={product.thumbnail} alt={product.title} fill />
+                    <div className="absolute right-0 p-2 ">
                         <Chip color="red" value={`${product.sale}% off`} />
                     </div>
                 </CardHeader>
@@ -49,10 +75,10 @@ export default function ProductCard({ product }: Props) {
                     </div>
                     <div className="flex justify-end items-center space-x-2 mb-2">
                         <Typography color="blue-gray" className="font-medium line-through">
-                            Rs.{product.price.base}
+                            {formatPrice(product.price.base)}
                         </Typography>
                         <Typography color="blue-gray" className="font-medium">
-                            Rs.{product.price.discounted}
+                            {formatPrice(product.price.discounted)}
                         </Typography>
                     </div>
                     <p className="font-normal text-sm opacity-75 line-clamp-3">
@@ -62,6 +88,12 @@ export default function ProductCard({ product }: Props) {
             </Link>
             <CardFooter className="pt-0 space-y-4">
                 <Button
+                    disabled={isPending}
+                    onClick={() => {
+                        startTransition(async () => {
+                            await addToCart()
+                        });
+                    }}
                     ripple={false}
                     fullWidth={true}
                     className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:shadow-none hover:scale-105 focus:shadow-none focus:scale-105 active:scale-100"

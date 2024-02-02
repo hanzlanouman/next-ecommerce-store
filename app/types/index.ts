@@ -89,3 +89,22 @@ export interface ProductToUpdate {
   thumbnail?: { url: string; id: string };
   images?: { url: string; id: string }[];
 }
+
+export interface NewCartRequest {
+  productId: string;
+  quantity: number;
+}
+
+export interface NewFeaturedProduct {
+  banner: { url: string; id: string };
+  link: string;
+  title: string;
+  linkTitle: string;
+}
+
+export interface FeaturedProductForUpdate {
+  banner?: { url: string; id: string };
+  link: string;
+  title: string;
+  linkTitle: string;
+}

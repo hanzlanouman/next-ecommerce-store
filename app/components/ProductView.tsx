@@ -1,6 +1,7 @@
 import React from "react";
 import BuyingOptions from "@components/BuyingOptions";
-// import ProductImageGallery from "@components/ProductImageGallery";
+import { formatPrice } from "../utils/helper";
+import ProductImageGallery from "@components/ProductImageGallery";
 
 interface Props {
     title: string;
@@ -11,14 +12,7 @@ interface Props {
     sale: number;
 }
 
-const formatPrice = (amount: number) => {
-    const formatter = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "INR",
-    });
 
-    return formatter.format(amount);
-};
 
 export default function ProductView({
     description,
@@ -32,7 +26,7 @@ export default function ProductView({
         <div className="flex lg:flex-row flex-col md:gap-4 gap-2">
             <div className="flex-1 lg:self-start self-center">
                 {/* Product Image Slider */}
-                {/* <ProductImageGallery images={images} /> */}
+                <ProductImageGallery images={images} />
             </div>
 
             <div className="flex-1 md:space-y-4 space-y-2">

@@ -7,9 +7,10 @@ import React from 'react'
 import { toast } from 'react-toastify'
 import { ValidationError } from 'yup'
 import { createProduct } from '../action'
+import { useRouter } from 'next/navigation'
 const Create = () => {
 
-
+    const router = useRouter()
 
     const handleCreateProduct = async (values: NewProductInfo) => {
         try {
@@ -41,6 +42,11 @@ const Create = () => {
                 images: productImages
 
             })
+
+            toast.success('Product created successfully')
+            router.refresh();
+            router.push('/products/create')
+
         } catch (error) {
             if (error instanceof ValidationError) {
                 error.inner.forEach(err => {
