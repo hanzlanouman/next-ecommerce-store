@@ -16,8 +16,8 @@ export const POST = async (req: Request) => {
 
     const { productId, quantity } = (await req.json()) as NewCartRequest;
 
-    if (!isValidObjectId(productId) || quantity < 1 || isNaN(quantity)) {
-      return NextResponse.json({ message: 'Invalid Request' }, { status: 401 });
+    if (!isValidObjectId(productId) || isNaN(quantity)) {
+      return NextResponse.json({ message: 'Invalid Request' }, { status: 402 });
     }
 
     await startDb();
@@ -46,7 +46,7 @@ export const POST = async (req: Request) => {
     );
 
     if (existingItem) {
-      existingItem.quantity += quantity;
+      existingItem.quantity = quantity + existingItem.quantity;
       if (existingItem.quantity < 1) {
         //if the quantity is less than 1, remove the item from the cart
         cart.items = cart.items.filter(
