@@ -1,6 +1,5 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import React from 'react';
 import { SessionUserProfile } from '../types';
 
 interface Auth {

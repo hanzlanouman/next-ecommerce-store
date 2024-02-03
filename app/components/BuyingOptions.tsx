@@ -36,7 +36,12 @@ export default function BuyingOptions() {
         const { error } = await res.json();
 
         if (!res.ok && error) toast.error(error);
-        if (res.ok) toast.success("Product added to cart");
+        if (res.ok) {
+            toast.success("Product added to cart");
+            router.refresh();
+        }
+
+
 
 
     };

@@ -6,6 +6,7 @@ import GridView from '@components/GridView'
 import ProductCard from '@components/ProductCard'
 import FeaturedProductsSlider from '@components/FeaturedProductsSlider'
 import FeaturedProductModel from '../models/featuredProduct'
+import HorizontalMenu from '../components/HorizontalMenu'
 
 
 interface LatestProduct {
@@ -45,6 +46,7 @@ const fetchLatestProducts = async () => {
 
 const fetchFeaturedProducts = async () => {
   await startDb()
+
   const products = await FeaturedProductModel.find().sort('-createdAt')
 
   const productList = products.map((product) => {
@@ -56,7 +58,6 @@ const fetchFeaturedProducts = async () => {
       linkTitle: product.linkTitle
     }
   })
-
 
   return JSON.stringify(productList)
 }
@@ -80,6 +81,7 @@ const Home: FC = async (
       <FeaturedProductsSlider
         products={featuredProducts}
       />
+      <HorizontalMenu />
       <GridView>
         {
           parsedProducts.map((product) => {

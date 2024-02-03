@@ -4,17 +4,23 @@ import React from 'react'
 import useAuth from '../hooks/useAuth'
 import { toast } from 'react-toastify'
 
-const EmailVerificationBanner = () => {
+interface Props {
+    id?: string;
+    verified?: boolean;
+}
 
-    const { profile } = useAuth()
+const EmailVerificationBanner = (
+    { id, verified }: Props
+) => {
+
     const [submitting, setSubmitting] = React.useState(false)
     const applyForReverification = async () => {
         setSubmitting(true)
-        if (!profile) {
+        if (!id) {
             return
         }
 
-        const res = await fetch('/api/users/verify?userId=' + profile.id,
+        const res = await fetch('/api/users/verify?userId=' + id,
             {
                 method: 'GET'
             })
@@ -30,8 +36,7 @@ const EmailVerificationBanner = () => {
         }
         setSubmitting(false)
     }
-    console.log(profile)
-    if (profile?.verified) {
+    if (verified) {
         return null
     }
 

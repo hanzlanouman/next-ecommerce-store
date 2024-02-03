@@ -11,7 +11,6 @@ interface Props {
 
 const GuestLayout = async ({ children }: Props) => {
   const session = await auth()
-  console.log(session)
   if (session) {
     return redirect('/')
   }

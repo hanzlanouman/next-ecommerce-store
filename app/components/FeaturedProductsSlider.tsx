@@ -34,7 +34,6 @@ const settings: Settings = {
 export default function FeaturedProductsSlider({ products }: Props) {
     const router = useRouter();
 
-    console.log(products, "products")
     if (!products.length) return null;
 
     return (

@@ -16,6 +16,7 @@ import useAuth from "@hooks/useAuth";
 
 interface Props {
     cartItemsCount: number;
+    avatar?: string;
 }
 
 export const menuItems = [
@@ -31,7 +32,7 @@ export const menuItems = [
     },
 ];
 
-export default function NavUI({ cartItemsCount }: Props) {
+export default function NavUI({ cartItemsCount, avatar }: Props) {
     const [open, setOpen] = React.useState(false);
     const { loading, loggedIn } = useAuth();
 
@@ -57,7 +58,9 @@ export default function NavUI({ cartItemsCount }: Props) {
                     <div className="hidden lg:flex gap-2 items-center">
                         <CartIcon cartItems={cartItemsCount} />
                         {loggedIn ? (
-                            <ProfileMenu menuItems={menuItems} />
+                            <ProfileMenu menuItems={menuItems}
+                                avatar={avatar}
+                            />
                         ) : loading ? (
                             <Spinner />
                         ) : (

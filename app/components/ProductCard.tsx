@@ -49,6 +49,8 @@ export default function ProductCard({ product }: Props) {
         if (!res.ok && error) toast.error(error);
         if (res.ok) toast.success("Product added to cart");
 
+        router.refresh();
+
 
     };
 

@@ -2,7 +2,9 @@ import ProductView from '@/app/components/ProductView'
 import startDb from '@/app/lib/db'
 import ProductModel from '@/app/models/productModel'
 import { isValidObjectId } from 'mongoose'
-import { redirect } from 'next/navigation'
+import { isRedirectError } from 'next/dist/client/components/redirect'
+import { redirect, useRouter } from 'next/navigation'
+import { Router } from 'next/router'
 import React from 'react'
 
 interface Props {
@@ -13,31 +15,28 @@ interface Props {
 
 const fetchProduct = async (productId: string) => {
 
-    try {
 
-        if (!isValidObjectId(productId)) return redirect('/404')
 
-        await startDb()
+    if (!isValidObjectId(productId)) return redirect('/404')
 
-        const product = await ProductModel.findById(productId)
+    await startDb()
 
-        if (!product) return redirect('/404')
+    const product = await ProductModel.findById(productId)
 
-        return JSON.stringify({
-            id: product._id.toString(),
-            title: product.title,
-            description: product.description,
-            thumbnail: product.thumbnail.url,
-            images: product.images?.map(({ url }) => url),
-            bulletPoints: product.bulletPoints,
-            price: product.price,
-            sale: product.sale
-        })
+    if (!product) return redirect('/404')
 
-    } catch (error) {
-        console.error(error)
-        return redirect('/404')
-    }
+    return JSON.stringify({
+        id: product._id.toString(),
+        title: product.title,
+        description: product.description,
+        thumbnail: product.thumbnail.url,
+        images: product.images?.map(({ url }) => url),
+        bulletPoints: product.bulletPoints,
+        price: product.price,
+        sale: product.sale
+    })
+
+
 
 }
 
