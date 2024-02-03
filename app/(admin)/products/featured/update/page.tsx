@@ -14,7 +14,7 @@ interface Props {
 
 
 const fetchFeaturedProduct = async (id: string) => {
-    if (!isValidObjectId(id)) return redirect('/404')
+    if (!isValidObjectId(id))  redirect('/404')
 
 
     try {
@@ -24,7 +24,7 @@ const fetchFeaturedProduct = async (id: string) => {
         const product = await FeaturedProductModel.findById(id)
 
 
-        if (!product) return redirect('/404')
+        if (!product)  redirect('/404')
 
         const { _id, title, link, linkTitle, banner } = product
         return {
@@ -37,7 +37,7 @@ const fetchFeaturedProduct = async (id: string) => {
 
     } catch (error) {
         console.log(error)
-        return redirect('/404')
+     redirect('/404')
     }
 
 

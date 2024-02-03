@@ -54,6 +54,24 @@ export default function ProductCard({ product }: Props) {
 
     };
 
+    const handleCheckout = async () => {
+
+
+        const res = await fetch('/api/checkout/instant', {
+            method: "POST",
+            body: JSON.stringify({
+                productId: product.id,
+            }),
+        });
+
+        const { url, error } = await res.json();
+        if (!res.ok && error) {
+            toast.error(error);
+        } else {
+            window.location.href = url;
+        }
+    }
+
     return (
         <Card className="w-full">
             <Link className="w-full" href={`/${product.title}/${product.id}`}>
@@ -91,6 +109,7 @@ export default function ProductCard({ product }: Props) {
             <CardFooter className="pt-0 space-y-4">
                 <Button
                     disabled={isPending}
+
                     onClick={() => {
                         startTransition(async () => {
                             await addToCart()
@@ -103,6 +122,11 @@ export default function ProductCard({ product }: Props) {
                     Add to Cart
                 </Button>
                 <Button
+                    onClick={() => {
+                        startTransition(async () => {
+                            await handleCheckout()
+                        });
+                    }}
                     ripple={false}
                     fullWidth={true}
                     className="bg-blue-400 text-white shadow-none hover:shadow-none hover:scale-105 focus:shadow-none focus:scale-105 active:scale-100"

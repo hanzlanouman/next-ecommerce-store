@@ -1,5 +1,5 @@
 import { getCartItems } from '@/app/lib/cartHelper';
-import { CartItems } from '@/app/types';
+import ProductModel from '@/app/models/productModel';
 import { auth } from '@/auth';
 import { isValidObjectId } from 'mongoose';
 import { NextResponse } from 'next/server';
@@ -18,46 +18,54 @@ export const POST = async (req: Request) => {
         { status: 401 }
       );
     const data = await req.json();
-    const cartId = data.cartId as string;
+    const productId = data.productId as string;
 
-    if (!isValidObjectId(cartId)) {
-      console.log(cartId);
-      return NextResponse.json({ error: 'Invalid Cart Id' }, { status: 400 });
+    if (!isValidObjectId(productId)) {
+      console.log(productId, 'HEyYYY ');
+      return NextResponse.json(
+        { error: 'Invalid Product Id' },
+        { status: 400 }
+      );
     }
 
-    //fetch cart details now
-    const cartItems = await getCartItems(session.user.id, cartId);
+    //fetch Product details now
+    const product = await ProductModel.findById(productId);
 
-    if (!cartItems) {
-      return NextResponse.json({ error: 'Cart not found' }, { status: 404 });
+    if (!product) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
-    const line_items = cartItems.products.map((product) => {
-      return {
-        price_data: {
-          currency: 'pkr',
-          unit_amount: product.price * 100,
-          product_data: {
-            name: product.title,
-            images: [product.thumbnail],
-          },
+    const line_items = {
+      price_data: {
+        currency: 'pkr',
+        unit_amount: product.price.discounted * 100,
+        product_data: {
+          name: product.title,
+          images: [product.thumbnail.url],
         },
-        quantity: product.quantity,
-      };
-    });
+      },
+      quantity: 1,
+    };
 
     const customer = await stripe.customers.create({
       metadata: {
         userId: session.user.id,
-        cartId: cartId,
-        type: 'checkout',
+        product: JSON.stringify({
+          id: product._id,
+          title: product.title,
+          thumbnail: product.thumbnail.url,
+          totalPrice: product.price.discounted,
+          price: product.price.discounted,
+          quantity: 1,
+        }),
+        type: 'instant-checkout',
       },
     });
 
     const params: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       payment_method_types: ['card'],
-      line_items,
+      line_items: [line_items],
       success_url: process.env.PAYMENT_SUCCESS_URL!,
       cancel_url: process.env.NEXT_PUBLIC_BASE_URL!,
       shipping_address_collection: {

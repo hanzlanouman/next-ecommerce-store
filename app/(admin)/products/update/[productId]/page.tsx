@@ -15,13 +15,13 @@ interface Props {
 }
 
 const fetchProductInfo = async (productId: string): Promise<string> => {
-    if (!isValidObjectId) return redirect('/404')
+    if (!isValidObjectId)  redirect('/404')
 
     await startDb();
 
     const product = await ProductModel.findById(productId)
 
-    if (!product) return redirect('/404')
+    if (!product)  redirect('/404')
 
 
     const finalProduct: ProdcutResponse = {

@@ -16,10 +16,10 @@ const AdminLayout = async ({ children }: Props) => {
 
     const isAdmin = user?.role === 'admin'
     if (!session) {
-        return redirect('/auth/signin')
+         redirect('/auth/signin')
     }
     if (!isAdmin) {
-        return redirect('/auth/signin')
+         redirect('/auth/signin')
     }
 
 

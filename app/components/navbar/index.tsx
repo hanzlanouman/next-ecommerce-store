@@ -4,7 +4,6 @@ import { auth } from '@/auth';
 import CartModel from '@/app/models/cartModel';
 import startDb from '@/app/lib/db';
 import { Types } from 'mongoose';
-import { redirect } from 'next/navigation';
 import UserModel from '@/app/models/userModel';
 
 

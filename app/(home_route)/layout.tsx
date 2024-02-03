@@ -1,8 +1,6 @@
 import React, {
     ReactNode
 } from 'react'
-import { auth } from '@/auth'
-import { redirect } from 'next/navigation'
 import Navbar from '@components/navbar'
 interface Props {
     children: ReactNode

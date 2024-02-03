@@ -108,8 +108,10 @@ const Cart = async () => {
             className="border-1 border-gray-300"
         />
         <CartItems
-            {...cart}
             cartTotal={cart.totalPrice}
+            totalQty={cart.totalQty}
+            products={cart.products}
+            cartId={cart.id}
         />
     </div>
     )

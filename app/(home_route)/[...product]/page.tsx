@@ -2,9 +2,7 @@ import ProductView from '@/app/components/ProductView'
 import startDb from '@/app/lib/db'
 import ProductModel from '@/app/models/productModel'
 import { isValidObjectId } from 'mongoose'
-import { isRedirectError } from 'next/dist/client/components/redirect'
 import { redirect, useRouter } from 'next/navigation'
-import { Router } from 'next/router'
 import React from 'react'
 
 interface Props {
@@ -17,13 +15,16 @@ const fetchProduct = async (productId: string) => {
 
 
 
-    if (!isValidObjectId(productId)) return redirect('/404')
+    if (!isValidObjectId(productId)) redirect('/404')
 
     await startDb()
 
     const product = await ProductModel.findById(productId)
 
-    if (!product) return redirect('/404')
+    if (!product) {
+        redirect('/404')
+
+    }
 
     return JSON.stringify({
         id: product._id.toString(),
