@@ -47,7 +47,7 @@ const sendEmailVerificationLink = async (profile: profile, linkUrl: string) => {
   await client.send({
     from: sender,
     to: recipients,
-    template_uuid: 'eba72c1b-18b1-465d-af1a-913fad2fd2f6',
+    template_uuid: '636e976d-20bf-4159-8c3b-29db541c880d',
     template_variables: {
       subject: 'Verify Your Email',
       user_name: profile.name,
@@ -76,7 +76,7 @@ const sendForgetPasswordLink = async (profile: profile, linkUrl: string) => {
   await client.send({
     from: sender,
     to: recipients,
-    template_uuid: 'eba72c1b-18b1-465d-af1a-913fad2fd2f6',
+    template_uuid: '636e976d-20bf-4159-8c3b-29db541c880d',
     template_variables: {
       subject: 'Forget Password Link',
       user_name: profile.name,
@@ -105,7 +105,7 @@ const sendUpdatePasswordConfirmation = async (profile: profile) => {
   await client.send({
     from: sender,
     to: recipients,
-    template_uuid: 'eba72c1b-18b1-465d-af1a-913fad2fd2f6',
+    template_uuid: '636e976d-20bf-4159-8c3b-29db541c880d',
     template_variables: {
       subject: 'Password Reset Successful',
       user_name: profile.name,
