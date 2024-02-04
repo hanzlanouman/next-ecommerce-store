@@ -3,17 +3,9 @@ import nodemailer from 'nodemailer';
 
 type profile = { name: string; email: string };
 
-interface MailtrapClientConfig {
-  endpoint: string;
-  token: string;
-}
-
 const TOKEN = process.env.MAILTRAP_TOKEN!;
-const ENDPOINT = process.env.MAILTRAP_ENDPOINT!;
-const client = new MailtrapClient({
-  endpoint: ENDPOINT,
-  token: TOKEN,
-} as MailtrapClientConfig);
+
+const client = new MailtrapClient({ token: TOKEN });
 
 const sender = {
   email: 'mailtrap@hanzlanouman.com',
