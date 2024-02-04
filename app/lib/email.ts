@@ -9,7 +9,7 @@ const client = new MailtrapClient({ token: TOKEN });
 
 const sender = {
   email: 'mailtrap@hanzlanouman.com',
-  name: 'Mailtrap Test',
+  name: 'Pro Store Shopping',
 };
 
 interface EmailOptions {
