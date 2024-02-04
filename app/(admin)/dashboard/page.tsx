@@ -1,8 +1,13 @@
+import Rating from '@/app/components/Rating'
 import React from 'react'
 
 const Dashboard = () => {
     return (
-        <div>Dashboard</div>
+        <div><Rating
+            value={2.5}
+        />
+
+        </div>
     )
 }
 
