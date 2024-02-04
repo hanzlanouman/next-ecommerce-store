@@ -12,32 +12,38 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export const POST = async (req: Request) => {
   try {
     const session = await auth();
-    if (!session)
+    if (!session?.user)
       return NextResponse.json(
-        { error: 'Unauthorized Request' },
+        {
+          error: 'Unauthorized request!',
+        },
         { status: 401 }
       );
+
     const data = await req.json();
     const productId = data.productId as string;
 
-    if (!isValidObjectId(productId)) {
-      console.log(productId, 'HEyYYY ');
+    if (!isValidObjectId(productId))
       return NextResponse.json(
-        { error: 'Invalid Product Id' },
-        { status: 400 }
+        {
+          error: 'Invalid product id!',
+        },
+        { status: 401 }
       );
-    }
 
-    //fetch Product details now
+    // fetching product details
     const product = await ProductModel.findById(productId);
-
-    if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
-    }
+    if (!product)
+      return NextResponse.json(
+        {
+          error: 'Product not found!',
+        },
+        { status: 404 }
+      );
 
     const line_items = {
       price_data: {
-        currency: 'pkr',
+        currency: 'INR',
         unit_amount: product.price.discounted * 100,
         product_data: {
           name: product.title,
@@ -50,36 +56,34 @@ export const POST = async (req: Request) => {
     const customer = await stripe.customers.create({
       metadata: {
         userId: session.user.id,
-        product: JSON.stringify({
-          id: product._id,
-          title: product.title,
-          thumbnail: product.thumbnail.url,
-          totalPrice: product.price.discounted,
-          price: product.price.discounted,
-          quantity: 1,
-        }),
         type: 'instant-checkout',
+        product: JSON.stringify({
+          id: productId,
+          title: product.title,
+          price: product.price.discounted,
+          totalPrice: product.price.discounted,
+          thumbnail: product.thumbnail.url,
+          qty: 1,
+        }),
       },
     });
 
+    // we need to generate payment link and send to our frontend app
     const params: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: [line_items],
       success_url: process.env.PAYMENT_SUCCESS_URL!,
-      cancel_url: process.env.NEXT_PUBLIC_BASE_URL!,
-      shipping_address_collection: {
-        allowed_countries: ['PK', 'US', 'CA', 'GB', 'AU'],
-      },
+      cancel_url: process.env.PAYMENT_CANCEL_URL!,
+      shipping_address_collection: { allowed_countries: ['PK'] },
       customer: customer.id,
     };
 
     const checkoutSession = await stripe.checkout.sessions.create(params);
-
     return NextResponse.json({ url: checkoutSession.url });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Something went wrong, could not checkout!' },
       { status: 500 }
     );
   }

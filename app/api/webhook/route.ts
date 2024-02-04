@@ -88,9 +88,8 @@ export const POST = async (req: Request) => {
         if (!product)
           return NextResponse.json(
             { error: 'Product not found' },
-            { status: 404 }
+            { status: 400 }
           );
-
         const productInfo = JSON.parse(product) as unknown as CartProduct;
         await OrderModel.create({
           userId,
