@@ -61,7 +61,7 @@ export const POST = async (req: Request) => {
 
     await sendEmail({
       profile: { name: user.name, email: user.email },
-      subject: 'password changed',
+      subject: 'password-changed',
     });
 
     return NextResponse.json(
