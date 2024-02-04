@@ -18,20 +18,22 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import Rating from "./Rating";
 
-interface Props {
-    product: {
-        id: string;
-        title: string;
-        description: string;
-        category: string;
-        thumbnail: string;
-        sale: number;
-        rating?: number;
-        price: {
-            base: number;
-            discounted: number;
-        };
+export interface Product {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    thumbnail: string;
+    sale: number;
+    rating?: number;
+    price: {
+        base: number;
+        discounted: number;
     };
+};
+
+interface Props {
+    product: Product;
 }
 
 export default function ProductCard({ product }: Props) {

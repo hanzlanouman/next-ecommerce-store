@@ -7,12 +7,13 @@ import {
     IconButton,
     Spinner,
 } from "@material-tailwind/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, HeartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ProfileMenu from "../ProfileMenu";
 import { MobileNav } from "../MobileNav";
 import CartIcon from '../CartIcon';
 import { UserCircleIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import useAuth from "@hooks/useAuth";
+import SearchForm from "../SearchForm";
 
 interface Props {
     cartItemsCount: number;
@@ -29,6 +30,11 @@ export const menuItems = [
         href: "/profile/orders",
         icon: <ShoppingBagIcon className="h-4 w-4" />,
         label: "Orders",
+    },
+    {
+        href: "/profile/wishlist",
+        icon: <HeartIcon className="h-4 w-4" />,
+        label: "Wishlist",
     },
 ];
 
@@ -52,8 +58,22 @@ export default function NavUI({ cartItemsCount, avatar }: Props) {
                         href="/"
                         className="mr-4 cursor-pointer py-1.5 lg:ml-2 font-semibold"
                     >
-                        Next Ecom
+                        Pro Store
                     </Link>
+
+
+                    <div className="flex-1 flex justify-center ">
+                        <div
+                            className="
+                            md:w-96 w-full md:mx-0 mx-4
+                            "
+                        >
+                            <SearchForm
+                                submitTo="/search?query="
+                            />
+                        </div>
+
+                    </div>
 
                     <div className="hidden lg:flex gap-2 items-center">
                         <CartIcon cartItems={cartItemsCount} />

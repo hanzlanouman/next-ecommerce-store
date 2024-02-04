@@ -4,6 +4,7 @@ import dateFormat from 'dateformat'
 import SalesChart from '@/app/components/SalesChart'
 import GridView from '@/app/components/GridView'
 import { formatPrice } from '@/app/utils/helper'
+import startDb from '@/app/lib/db'
 
 
 
@@ -25,6 +26,8 @@ const sevenDaysSalesHistory = async () => {
 
 
     //Fetch data for those 7 days
+
+    await startDb()
     const last7DaysSale: {
         _id: string,
         totalAmount: number

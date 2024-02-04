@@ -5,6 +5,7 @@ import { StarIcon as RatedIcon } from "@heroicons/react/24/solid";
 import { StarIcon as UnratedIcon } from "@heroicons/react/24/outline";
 import React, { useState, FormEventHandler, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface Props {
     productId: string;
@@ -18,6 +19,7 @@ export default function ReviewForm({ productId, initialValue }: Props) {
         comment: "",
     });
 
+    const router = useRouter()
     const submitReview: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         const { rating, comment } = review;
@@ -36,7 +38,9 @@ export default function ReviewForm({ productId, initialValue }: Props) {
             toast.success("Review submitted successfully!");
         }
 
+        //    Replace and Refresh the page with /product/[id]
         setIsPending(false);
+        router.replace(`/product/${productId}`);
     };
 
     useEffect(() => {

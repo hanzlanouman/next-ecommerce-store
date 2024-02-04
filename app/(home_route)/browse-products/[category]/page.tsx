@@ -6,6 +6,7 @@ import GridView from '@components/GridView'
 import ProductCard from '@components/ProductCard'
 
 import HorizontalMenu from '@components/HorizontalMenu'
+import CategoryMenu from '@components/CategoryMenu'
 
 
 interface LatestProduct {
@@ -65,7 +66,7 @@ const ProductByCategory = async (
 
     return (
         <div className='py-5 space-y-10'>
-            < HorizontalMenu />
+            < CategoryMenu />
             {parsedProducts.length ?
                 <GridView>
                     {parsedProducts.map((product) => {
